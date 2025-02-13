@@ -7,8 +7,7 @@ const postRouter = express.Router();
 postRouter.post('/', async (req, res) => {
   const { userId, text } = req.body;
   try {
-    const post = new Post({ userId, text });
-    await post.save();
+    const post = await Post.insertOne({ userId, text });
     res.status(201).send({ status: "success", payload: post });
   } catch (err) {
     res.status(500).send({ status: "error", message: err.message });

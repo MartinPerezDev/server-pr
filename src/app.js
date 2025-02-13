@@ -8,6 +8,7 @@ import viewsRouter from './routes/views.router.js';
 import { engine } from "express-handlebars"
 import { Server } from 'socket.io';
 import Post from "./models/post.model.js"
+import User from './models/user.model.js';
 
 //inicializamos nuestras variables de entorno
 dotenv.config();
@@ -51,6 +52,16 @@ io.on('connection', (socket) => {
       post.likes += 1;
       await post.save();
       io.emit('updateLikes', { postId, likes: post.likes }); // Enviar actualización a todos los clientes
+    }
+  });
+
+  socket.on("new post", async(post)=> {
+    try {
+      const user = await User.findById(post.userId);
+      console.log(user);
+      io.emit("broadcast post", {...post, name: user.name});
+    } catch (error) {
+      console.log("Error")
     }
   });
 

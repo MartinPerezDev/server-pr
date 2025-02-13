@@ -7,8 +7,7 @@ const userRouter = express.Router();
 userRouter.post('/', async (req, res) => {
   const { name, profilePic } = req.body;
   try {
-    const user = new User({ name, profilePic });
-    await user.save();
+    const user = await User.insertOne({ name, profilePic });
     res.status(201).send({ status: "success", payload: user });
   } catch (err) {
     res.status(500).send({ status: "error", message: err.message });
