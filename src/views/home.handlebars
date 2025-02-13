@@ -1,0 +1,22 @@
+<h2>Publicaciones</h2>
+<ul>
+  {{#each posts}}
+    <li>
+      <strong>{{this.userId}}</strong>: {{this.text}} <br>
+      ❤️ <span id="likes-{{this._id}}">{{this.likes}}</span>
+      <button onclick="likePost('{{this._id}}')">Like</button>
+    </li>
+  {{/each}}
+</ul>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  function likePost(postId) {
+    socket.emit('like', postId);
+  }
+
+  socket.on('updateLikes', (data) => {
+    document.getElementById(`likes-${data.postId}`).innerText = data.likes;
+  });
+</script>
